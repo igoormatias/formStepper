@@ -10,6 +10,8 @@ function FormularioCadastro({ aoEnviar, validacoes }) {
   const [etapaAtual, setEtapaAtual] = useState(0);
   const [formData, setFormData] = useState({});
 
+  
+
   useEffect(() => {
     if (etapaAtual === formularios.length - 1) {
       aoEnviar(formData);
@@ -54,8 +56,8 @@ function FormularioCadastro({ aoEnviar, validacoes }) {
           );
         })}
         <Step>
-          <StepLabel>Finalização</StepLabel>
         </Step>
+        <StepLabel>Finalização</StepLabel>
       </Stepper>
       {formularios[etapaAtual]}
     </>

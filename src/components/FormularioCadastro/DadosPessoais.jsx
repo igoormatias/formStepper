@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
 
-function DadosPessoais({ aoEnviar, comeBack, validacoes }) {
+import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+
+function DadosPessoais({ aoEnviar, comeBack }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -9,24 +11,30 @@ function DadosPessoais({ aoEnviar, comeBack, validacoes }) {
   const [novidades, setNovidades] = useState(false);
   const [erros, setErros] = useState({ cpf: { valido: true, texto: "" } });
 
+  const validacoes = useContext(ValidacoesCadastro);
+
   function validarCampos(event) {
     const { name, value } = event.target;
     const isValid = validacoes[name](value);
-    console.log("isvalid", isValid);
     const newErros = { ...erros };
-    console.log("newErros", newErros);
     newErros[name] = isValid;
-    console.log("newErros2", newErros);
     setErros(newErros);
   }
 
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
+  function sendFormData(event) {
+    event.preventDefault();
+    for (let campo in erros) {
+      if (erros[campo].valido) {
         aoEnviar({ nome, sobrenome, cpf, novidades, promocoes });
-      }}
-    >
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  return (
+    <form onSubmit={sendFormData}>
       <TextField
         value={nome}
         onChange={(event) => {
